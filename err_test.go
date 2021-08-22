@@ -20,12 +20,33 @@ func TestError(t *testing.T) {
 	if e.Error() != "test" {
 		t.Error("Error message not expected", e.Error())
 	}
+	if !e.Equals(Error("test")) {
+		t.Error("Error equals should succeed on errors with the same message")
+	}
+	if e.Equals(Error("test other")) {
+		t.Error("Error equals should fail for any other error")
+	}
+	if e.WithParameters("something") != e {
+		t.Error("Plain Error should have WithParameters as a neutral operation")
+	}
 }
 
 func TestErrors(t *testing.T) {
 	es := NewErrors()
 	es.AddError(sampleError1)
 	es.Add("sample error 2")
+	if !es.Equals(es) {
+		t.Error("Errors equals should succeed with itself")
+	}
+	es2 := NewErrors()
+	es2.AddError(sampleError1)
+	es2.Add("sample error 2")
+	if es.Equals(es2) {
+		t.Error("Errors equals should only succeed with itself")
+	}
+	if es.WithParameters("something") != es {
+		t.Error("Errors should have WithParameters as a neutral operation")
+	}
 	if es.Count() != 2 {
 		t.Error("Reporting incorrect number of errors :", es.Count())
 	}
