@@ -41,7 +41,7 @@ func TestErrorF(t *testing.T) {
 }
 
 func TestErrors(t *testing.T) {
-	es := NewErrors()
+	es := Errors()
 	es.AddError(sampleError1)
 	es.Add("sample error 2")
 
@@ -85,7 +85,7 @@ func TestErrors(t *testing.T) {
 }
 
 func ExampleErrors() {
-	es := NewErrors()
+	es := Errors()
 	es.AddError(sampleError1)
 	es.AddError(sampleError2)
 	es.AddError(sampleError3)

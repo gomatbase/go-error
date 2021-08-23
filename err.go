@@ -54,9 +54,9 @@ func (e *errorFInstance) Error() string {
 	return e.msg
 }
 
-// Errors type of error containing multiple entries for batch processing and collection of full set of errors
+// IErrors type of error containing multiple entries for batch processing and collection of full set of errors
 // (instead of failing on the first error)
-type Errors interface {
+type IErrors interface {
 	error
 	Add(message string)
 	AddError(e error)
@@ -64,13 +64,13 @@ type Errors interface {
 	Count() int
 }
 
-// Errors implementation
+// IErrors implementation
 type errors struct {
 	errors []error
 }
 
-// NewErrors creates and returns a new Errors object
-func NewErrors() Errors {
+// Errors creates and returns a new IErrors object
+func Errors() IErrors {
 	return &errors{
 		errors: []error{},
 	}
