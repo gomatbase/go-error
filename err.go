@@ -131,3 +131,13 @@ func IsContainedIn(e error, es error) bool {
 	}
 	return e == es
 }
+
+func Count(e error) int {
+	if e == nil {
+		return 0
+	}
+	if errors, isErrors := e.(IErrors); isErrors {
+		return errors.Count()
+	}
+	return 1
+}

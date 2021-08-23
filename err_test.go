@@ -110,6 +110,22 @@ func TestIsContainedIn(t *testing.T) {
 	}
 }
 
+func TestCount(t *testing.T) {
+	es := Errors()
+	es.AddError(sampleError1)
+	es.AddError(sampleError2)
+
+	if Count(nil) != 0 {
+		t.Error("null errors should result in a 0 count")
+	}
+	if count := Count(es); count != 2 {
+		t.Error("Count of errors not the expected amount :", count)
+	}
+	if Count(sampleError2) != 1 {
+		t.Error("Count of any error should result in 1")
+	}
+}
+
 func ExampleErrors() {
 	es := Errors()
 	es.AddError(sampleError1)
