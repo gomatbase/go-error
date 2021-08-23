@@ -28,6 +28,9 @@ func (ef ErrorF) Error() string {
 
 // IsKindOf checks if the err is a kind of then ErrorF
 func (ef ErrorF) IsKindOf(e error) bool {
+	if e == nil {
+		return false
+	}
 	if efi, isErrorFInstance := e.(*errorFInstance); isErrorFInstance {
 		return efi.base == ef
 	}
