@@ -84,6 +84,32 @@ func TestErrors(t *testing.T) {
 	})
 }
 
+func TestIsContainedIn(t *testing.T) {
+	es := Errors()
+	es.AddError(sampleError1)
+	efInstance := sampleErrorF.WithValues("something")
+	es.AddError(efInstance)
+
+	if !IsContainedIn(sampleError1, es) {
+		t.Error("sample error 1 should be contained in errors")
+	}
+	if IsContainedIn(sampleError2, es) {
+		t.Error("sample error 2 should not be contained in errors")
+	}
+	if !IsContainedIn(sampleErrorF, es) {
+		t.Error("sample error f should be contained in errors")
+	}
+	if !IsContainedIn(sampleErrorF, efInstance) {
+		t.Error("sample error f should be contained in error f instance")
+	}
+	if !IsContainedIn(sampleError1, Error("sample error 1")) {
+		t.Error("sample error 1 should be contained in sample error 1")
+	}
+	if IsContainedIn(sampleError1, sampleError2) {
+		t.Error("sample error 1 should not be contained in sample error 2")
+	}
+}
+
 func ExampleErrors() {
 	es := Errors()
 	es.AddError(sampleError1)

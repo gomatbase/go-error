@@ -118,3 +118,16 @@ func (es *errors) Contains(e error) bool {
 func (es *errors) Count() int {
 	return len(es.errors)
 }
+
+// IsContainedIn
+// Utility method to check if an error is contained in an Errors collection without having to assert the error type
+// it returns true if errors is an instance of Errors and contains e, or if e is of type ErrorF returns true if errors
+// is a kind of e, or returns e == errors. Meant to work for functions expecting to return go-error errors.
+func IsContainedIn(e error, es error) bool {
+	if errors, isErrors := es.(IErrors); isErrors {
+		return errors.Contains(e)
+	} else if ef, isErrorF := e.(ErrorF); isErrorF {
+		return ef.IsKindOf(es)
+	}
+	return e == es
+}
