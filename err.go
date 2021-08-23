@@ -86,17 +86,6 @@ func (es *errors) Error() string {
 	return buffer.String()
 }
 
-// Equals will check if the given error is the same object. Not meant to be used.
-func (es *errors) Equals(e error) bool {
-	// It's the same if it's the same collection of errors.
-	return es == e
-}
-
-// WithParameters is a no-op and will return itself
-func (es *errors) WithParameters(_ ...interface{}) error {
-	return es
-}
-
 // Add add a new error message entry
 func (es *errors) Add(message string) {
 	es.AddError(Error(message))
