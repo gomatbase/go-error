@@ -13,9 +13,6 @@ const (
 	sampleError1 = Error("sample error 1")
 	sampleError2 = Error("sample error 2")
 	sampleError3 = Error("sample error 3")
-)
-
-var (
 	sampleErrorF = ErrorF("test %s")
 )
 
@@ -24,44 +21,22 @@ func TestError(t *testing.T) {
 	if e.Error() != "test" {
 		t.Error("Error message not expected", e.Error())
 	}
-	if !e.Equals(Error("test")) {
-		t.Error("Error equals should succeed on errors with the same message")
-	}
-	if e.Equals(Error("test other")) {
-		t.Error("Error equals should fail for any other error")
-	}
-	if e.WithParameters("something") != e {
-		t.Error("Plain Error should have WithParameters as a neutral operation")
-	}
 }
 
 func TestErrorF(t *testing.T) {
-	ef := ErrorF("test %s")
-	ef2 := ErrorF("test %s")
-	if ef.Equals(ef2) {
-		t.Error("Error kinds should only be equal to itself")
+	if sampleErrorF.Error() != "test %s" {
+		t.Error("Error message not expected", sampleErrorF.Error())
 	}
-	if !ef.Equals(ef) {
-		t.Error("Error kinds should be equal to itself")
-	}
-	e := ef.WithParameters("something").(IError)
+
+	e := sampleErrorF.WithValues("something")
 	if e.Error() != "test something" {
 		t.Error("Error message not expected", e.Error())
 	}
-	if !e.Equals(Error("test something")) {
-		t.Error("Error equals should succeed on errors with the same message")
+	if !sampleErrorF.IsKindOf(e) {
+		t.Error("Error is not of the expected kind")
 	}
-	if !e.Equals(ef) {
-		t.Error("Error equals should succeed comparing with the kind of error")
-	}
-	if e.Equals(Error("test other")) {
-		t.Error("Error equals should fail for any other error")
-	}
-	if e.Equals(ef2) {
-		t.Error("Error equals should fail comparing with any other error kind")
-	}
-	if e.WithParameters("something") == e {
-		t.Error("With parameters should result in a different error instance")
+	if !ErrorF("test %s").IsKindOf(e) {
+		t.Error("Error is not of the expected kind")
 	}
 }
 
@@ -69,20 +44,8 @@ func TestErrors(t *testing.T) {
 	es := NewErrors()
 	es.AddError(sampleError1)
 	es.Add("sample error 2")
-	if !es.Equals(es) {
-		t.Error("Errors equals should succeed with itself")
-	}
-	es2 := NewErrors()
-	es2.AddError(sampleError1)
-	es2.Add("sample error 2")
-	if es.Equals(es2) {
-		t.Error("Errors equals should only succeed with itself")
-	}
-	if es.WithParameters("something") != es {
-		t.Error("Errors should have WithParameters as a neutral operation")
-	}
 
-	es.AddError(sampleErrorF.WithParameters("something").(IError))
+	es.AddError(sampleErrorF.WithValues("something"))
 
 	if es.Count() != 3 {
 		t.Error("Reporting incorrect number of errors :", es.Count())
@@ -112,8 +75,11 @@ func TestErrors(t *testing.T) {
 		if es.Contains(Error("sample error 3")) {
 			t.Error("Errors contains sample 3")
 		}
-		if !es.Contains(Error("test something")) {
-			t.Error("Errors doesn't containt errorf")
+		if !es.Contains(ErrorF("test %s")) {
+			t.Error("Errors doesn't containd errorf")
+		}
+		if es.Contains(Error("test something")) {
+			t.Error("Errors identifies errorF instance as an error instance")
 		}
 	})
 }
@@ -123,7 +89,7 @@ func ExampleErrors() {
 	es.AddError(sampleError1)
 	es.AddError(sampleError2)
 	es.AddError(sampleError3)
-	es.AddError(sampleErrorF.WithParameters("something").(IError))
+	es.AddError(sampleErrorF.WithValues("something"))
 
 	fmt.Print(es.Error())
 
