@@ -1,4 +1,4 @@
-> Project is archived in deference to https://github.com/gomatbase/csn
+> https://github.com/gomatbase/csn should be used in the future. Project archived.
 
 # go-error
 
