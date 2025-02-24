@@ -1,3 +1,5 @@
+> Project is archived in deference to https://github.com/gomatbase/csn
+
 # go-error
 
 err is a package with utility types to handle errors as constants and collections.
